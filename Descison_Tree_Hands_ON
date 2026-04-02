@@ -1,0 +1,55 @@
+###Decesion Tree
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn import tree
+from sklearn.preprocessing import LabelEncoder
+
+Data=pd.read_csv("Decision Tree.csv.csv")
+print(Data.head())
+print("-"*30)
+print(Data.shape)
+print("-"*30)
+print(Data.describe())
+print("-"*30)
+print(Data.info())
+print("-"*30)
+print("Convert String to int")
+
+le = LabelEncoder()
+Data = Data.apply(le.fit_transform)   # new DataFrame with numbers
+print(Data.head())
+print("-"*30)
+
+# Features and target
+X = Data.drop(['play'], axis=1)   # use encoded version
+y = Data['play']
+
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+print(f"X_train shape:",X_train.shape)
+print(f"y_train shape:",y_train.shape)
+print("-"*30)
+print(f"X_test shape:",X_test.shape)
+print(f"y_test shape:",y_test.shape)
+print("-"*30)
+
+
+Tree=DecisionTreeClassifier(criterion='entropy',splitter='best')
+Tree.fit(X_train,y_train)
+
+y_pred=Tree.predict(X_test)
+Tree.fit(X_train,y_train)
+
+print(y_pred)
+print("-"*30)
+
+##Acurcy scrore
+Ac=accuracy_score(y_test,y_pred)
+print(Ac)
+
+fig, axes = plt.subplots(nrows=1,ncols=1,figsize=(5,5),dpi=100)
+tree.plot_tree(Tree)
+plt.show()
