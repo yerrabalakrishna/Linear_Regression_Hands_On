@@ -1,0 +1,59 @@
+#Importing All Depandeis
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import classification_report
+
+#Create Dataset
+Data=pd.read_csv("synthetic_drug_data.csv")
+print(Data.head())
+print(Data.shape)
+print(Data.describe())
+print(Data.info())
+print(Data.tail(10))
+# Drop non-numeric columns
+Data = Data.drop(['ReportID','Gender','DrugName','Dosage','ConcomitantDrugs','Seriousness'], axis=1)
+#Depandes
+x = Data.iloc[:,:-1]
+y = Data.iloc[:,-1]
+print(x.head(2))
+print(y.head(2))
+#target values
+# Drop non-numeric columns
+
+print(Data['OnsetDays'].value_counts())
+
+#Train test
+X_train, X_test, y_train, y_test=train_test_split(x,y,test_size=0.2,random_state=42)
+print(f"X_train shape:",X_train.shape)
+print(f"y_train shape:",y_train.shape)
+print("-"*30)
+print(f"X_test shape:",X_test.shape)
+print(f"y_test shape:",y_test.shape)
+
+
+##Create Model
+logModel=LogisticRegression(max_iter=100)
+logModel.fit(X_train,y_train)
+print(logModel)
+##Pridict Values
+y_pred=logModel.predict(X_test)
+print(y_pred)
+print(y_test)
+
+##Confustion Metrics
+metrics=confusion_matrix(y_test,y_pred)
+print(metrics)
+
+#report Of Classification
+Display=classification_report(y_test,y_pred)
+print(Display)
+
+##create plots
+sns.countplot(x='OnsetDays',data=Data,palette='hsv')
+plt.show()
